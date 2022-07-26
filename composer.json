@@ -1,0 +1,32 @@
+{
+  "name": "mycoolpay/php-logger",
+  "type": "library",
+  "description": "My-CoolPay PHP logging utilities",
+  "keywords": ["mycoolpay", "debug", "log"],
+  "homepage": "https://github.com/mycoolpay/php-logger",
+  "license": "Apache-2.0",
+  "support": {
+    "forum": "https://t.me/mycoolpay",
+    "issues": "https://github.com/mycoolpay/php-logger/issues"
+  },
+  "authors": [
+    {
+      "name": "My-CoolPay",
+      "email": "support@my-coolpay.com",
+      "homepage": "https://my-coolpay.com/en/"
+    }
+  ],
+  "require": {
+    "php": ">=5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "MyCoolPay\\Logging\\": "src/"
+    }
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "1.x-dev"
+    }
+  }
+}
