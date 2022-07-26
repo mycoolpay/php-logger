@@ -11,15 +11,15 @@ class Logger implements LoggerInterface
     /**
      * @var string $filename
      */
-    private $filename;
+    protected $filename;
     /**
      * @var string $dir
      */
-    private $dir;
+    protected $dir;
     /**
      * @var string $datetime_format
      */
-    private $datetime_format;
+    protected $datetime_format;
 
     /**
      * @param string $filename
