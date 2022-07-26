@@ -23,7 +23,7 @@ class Logger implements LoggerInterface
 
     /**
      * @param string $filename
-     * @param ?string $dir
+     * @param string|null $dir
      * @param int $permissions
      * @param string $datetime_format
      */
@@ -51,7 +51,7 @@ class Logger implements LoggerInterface
 
     /**
      * @param string $filename
-     * @return self
+     * @return $this
      */
     public function setFilename($filename)
     {

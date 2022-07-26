@@ -11,7 +11,7 @@ class LogLevel
 
     /**
      * @param int $log_level
-     * @return ?string
+     * @return string|null
      */
     public static function getTitle($log_level)
     {
