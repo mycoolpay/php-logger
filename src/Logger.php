@@ -138,10 +138,12 @@ class Logger implements LoggerInterface
      */
     public function logException($exception)
     {
-        $class_name = get_class($exception);
+        $class = get_class($exception);
+        $class_parts = explode('\\', $class);
+        $class_name = end($class_parts);
         $content = $class_name . PHP_EOL
             . "---------- Begin $class_name ----------" . PHP_EOL
-            . 'TYPE | ' . get_class($exception) . PHP_EOL
+            . 'TYPE | ' . $class . PHP_EOL
             . 'FILE | ' . $exception->getFile() . PHP_EOL
             . 'LINE | ' . $exception->getLine() . PHP_EOL
             . 'CODE | ' . $exception->getCode() . PHP_EOL

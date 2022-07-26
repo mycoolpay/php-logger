@@ -2,7 +2,11 @@
   "name": "mycoolpay/php-logger",
   "type": "library",
   "description": "My-CoolPay PHP logging utilities",
-  "keywords": ["mycoolpay", "debug", "log"],
+  "keywords": [
+    "mycoolpay",
+    "debug",
+    "log"
+  ],
   "homepage": "https://github.com/mycoolpay/php-logger",
   "license": "Apache-2.0",
   "support": {
