@@ -17,28 +17,32 @@ class Logger implements LoggerInterface
      */
     protected $dir;
     /**
+     * @var int $permissions
+     */
+    protected $permissions;
+    /**
      * @var string $datetime_format
      */
     protected $datetime_format;
+    /**
+     * @var string $timezone
+     */
+    protected $timezone;
 
     /**
      * @param string $filename
      * @param string|null $dir
      * @param int $permissions
+     * @param string|null $timezone
      * @param string $datetime_format
      */
-    public function __construct($filename = 'app.log', $dir = null, $permissions = 0777, $datetime_format = '[Y-m-d\TH:i:sP]')
+    public function __construct($filename = 'app.log', $dir = null, $permissions = 0777, $timezone = null, $datetime_format = '[Y-m-d H:i:s]')
     {
-        if (is_null($dir))
-            $dir = sys_get_temp_dir();
-        if (preg_match('#[/\\\]$#', $dir))
-            $dir = preg_replace('#[/\\\]$#', '', $dir); // Remove trailing slash
-        if (!file_exists($dir))
-            mkdir($dir, $permissions, true);
-
-        $this->dir = $dir;
+        $this->setDir($dir);
+        $this->permissions = $permissions;
         $this->filename = $filename;
         $this->datetime_format = $datetime_format;
+        $this->timezone = $timezone;
     }
 
     /**
@@ -68,6 +72,77 @@ class Logger implements LoggerInterface
     }
 
     /**
+     * @param string $dir
+     * @return $this
+     */
+    public function setDir($dir)
+    {
+        if (is_null($dir))
+            $dir = sys_get_temp_dir();
+        if (preg_match('#[/\\\]$#', $dir))
+            $dir = preg_replace('#[/\\\]$#', '', $dir); // Remove trailing slash
+        if (!file_exists($dir))
+            mkdir($dir, $this->permissions, true);
+
+        $this->dir = $dir;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param int $permissions
+     * @return $this
+     */
+    public function setPermissions($permissions)
+    {
+        $this->permissions = $permissions;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDatetimeFormat()
+    {
+        return $this->datetime_format;
+    }
+
+    /**
+     * @param string $datetime_format
+     * @return $this
+     */
+    public function setDatetimeFormat($datetime_format)
+    {
+        $this->datetime_format = $datetime_format;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTimezone()
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * @param string|null $timezone
+     * @return $this
+     */
+    public function setTimezone($timezone)
+    {
+        $this->timezone = $timezone;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getFilepath()
@@ -81,8 +156,11 @@ class Logger implements LoggerInterface
     private function getDatetime()
     {
         try {
-            return (new DateTime('now', new DateTimeZone('UTC')))
-                ->format($this->datetime_format);
+            $now = is_null($this->timezone)
+                ? new DateTime('now')
+                : new DateTime('now', new DateTimeZone($this->timezone));
+
+            return $now->format($this->datetime_format);
 
         } catch (Exception $exception) {
             return date($this->datetime_format);
@@ -94,11 +172,16 @@ class Logger implements LoggerInterface
      */
     public function log($message, $log_level = LogLevel::INFO)
     {
-        return file_put_contents(
-            $this->getFilepath(),
-            $this->getDatetime() . ' ' . LogLevel::getTitle($log_level) . ': ' . $message . PHP_EOL,
-            FILE_APPEND
-        );
+        $log = '';
+        $datetime = $this->getDatetime();
+        $log_level = LogLevel::getTitle($log_level);
+        $parts = preg_split('/\r?\n/', $message);
+
+        foreach ($parts as $part) {
+            $log .= "$datetime $log_level: $part" . PHP_EOL;
+        }
+
+        return file_put_contents($this->getFilepath(), $log, FILE_APPEND);
     }
 
     /**
