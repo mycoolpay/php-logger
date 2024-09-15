@@ -75,7 +75,7 @@ class Logger implements LoggerInterface
      * @param string $dir
      * @return $this
      */
-    public function setDir($dir)
+    final public function setDir($dir)
     {
         if (is_null($dir))
             $dir = sys_get_temp_dir();
@@ -153,7 +153,7 @@ class Logger implements LoggerInterface
     /**
      * @return string
      */
-    private function getDatetime()
+    protected function getDatetime()
     {
         try {
             $now = is_null($this->timezone)
